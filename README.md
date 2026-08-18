@@ -35,6 +35,12 @@ Try the sample file at `sample-data/sample-cdc.csv`.
 
 PDF and CSV uploads are both supported. Parsing runs in the browser.
 
+## Documentation
+
+Full project documentation (architecture, user guide, field dictionary, status codes, privacy, and operations) is available as a PDF:
+
+- [`docs/OpenSooq-CDC-Data-Analyzer-Documentation.pdf`](docs/OpenSooq-CDC-Data-Analyzer-Documentation.pdf)
+
 ## Privacy
 
 Uploaded files are parsed in the browser. Nothing is sent to third-party AI services by default.

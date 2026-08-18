@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="Hashem Matouq" />
+  <title>OpenSooq CDC Data Analyzer — Full Project Documentation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 20mm 16mm;
+      @bottom-center {
+        content: "OpenSooq CDC Data Analyzer  ·  Page " counter(page) " of " counter(pages);
+        font-size: 8.5pt;
+        color: #6b7590;
+        font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      }
+    }
+    @page :first {
+      @bottom-center { content: none; }
+    }
+
+    :root {
+      --os-blue: #33529d;
+      --os-blue-dark: #27407c;
+      --os-navy: #16234a;
+      --os-green: #87be57;
+      --os-green-dark: #5f8f3c;
+      --os-sky: #eef1f9;
+      --os-soft: #f6f7fb;
+      --os-border: #e3e7f1;
+      --os-muted: #6b7590;
+      --os-warning: #c9860b;
+      --os-danger: #d0403f;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      color: var(--os-navy);
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+    }
+
+    /* Cover */
+    .cover {
+      page-break-after: always;
+      min-height: 240mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 24mm 8mm;
+      background: linear-gradient(165deg, #16234a 0%, #27407c 42%, #33529d 78%, #3d6aad 100%);
+      color: #fff;
+      border-radius: 0;
+      margin: -18mm -16mm 0 -16mm;
+      padding: 42mm 22mm 36mm 22mm;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(135, 190, 87, 0.22);
+      border: 1px solid rgba(135, 190, 87, 0.55);
+      color: #d8f0b8;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 9pt;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .cover h1 {
+      font-size: 32pt;
+      line-height: 1.15;
+      margin: 0 0 12px 0;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .cover .subtitle {
+      font-size: 13pt;
+      color: #c8d4ef;
+      max-width: 420px;
+      margin: 0 0 36px 0;
+      line-height: 1.45;
+    }
+    .cover-meta {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding-top: 22px;
+      margin-top: 12px;
+      font-size: 10pt;
+      color: #b8c6e4;
+    }
+    .cover-meta strong { color: #fff; }
+    .cover-meta p { margin: 4px 0; }
+    .cover-accent {
+      width: 72px;
+      height: 5px;
+      background: var(--os-green);
+      border-radius: 3px;
+      margin: 18px 0 28px 0;
+    }
+
+    h1.section {
+      color: var(--os-blue);
+      font-size: 18pt;
+      margin: 0 0 10px 0;
+      padding-bottom: 6px;
+      border-bottom: 2.5px solid var(--os-green);
+      page-break-after: avoid;
+    }
+    h2 {
+      color: var(--os-blue-dark);
+      font-size: 13pt;
+      margin: 18px 0 8px 0;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: var(--os-navy);
+      font-size: 11pt;
+      margin: 14px 0 6px 0;
+      page-break-after: avoid;
+    }
+    p { margin: 0 0 9px 0; }
+    ul, ol { margin: 0 0 10px 0; padding-left: 18px; }
+    li { margin-bottom: 3px; }
+    strong { color: var(--os-navy); }
+
+    .toc {
+      page-break-after: always;
+    }
+    .toc ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: toc;
+    }
+    .toc li {
+      counter-increment: toc;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--os-border);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .toc li::before {
+      content: counter(toc, decimal-leading-zero);
+      color: var(--os-green-dark);
+      font-weight: 700;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .toc a {
+      color: var(--os-navy);
+      text-decoration: none;
+      flex: 1;
+    }
+
+    .section-block {
+      page-break-before: always;
+    }
+    .section-block:first-of-type { page-break-before: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 14px 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+    th {
+      background: var(--os-blue);
+      color: #fff;
+      text-align: left;
+      padding: 7px 8px;
+      font-weight: 600;
+    }
+    td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--os-border);
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: var(--os-soft); }
+    code, .mono {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 8.5pt;
+      background: var(--os-sky);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    pre {
+      background: #16234a;
+      color: #e8eefc;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 8pt;
+      line-height: 1.45;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+      page-break-inside: avoid;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+
+    .callout {
+      background: var(--os-sky);
+      border-left: 4px solid var(--os-blue);
+      padding: 10px 12px;
+      margin: 10px 0 14px 0;
+      border-radius: 0 8px 8px 0;
+      page-break-inside: avoid;
+    }
+    .callout.green {
+      background: #f0f7e9;
+      border-left-color: var(--os-green);
+    }
+    .callout.warn {
+      background: #fdf4e3;
+      border-left-color: var(--os-warning);
+    }
+    .callout.danger {
+      background: #fdeded;
+      border-left-color: var(--os-danger);
+    }
+    .callout strong { display: block; margin-bottom: 2px; }
+
+    .grid-2 {
+      display: flex;
+      gap: 12px;
+      margin: 10px 0;
+    }
+    .grid-2 > div {
+      flex: 1;
+      background: var(--os-soft);
+      border: 1px solid var(--os-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      page-break-inside: avoid;
+    }
+    .grid-2 h3 { margin-top: 0; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 8pt;
+      font-weight: 600;
+    }
+    .badge.blue { background: var(--os-sky); color: var(--os-blue); }
+    .badge.green { background: #f0f7e9; color: var(--os-green-dark); }
+    .badge.warn { background: #fdf4e3; color: #8a5d08; }
+    .badge.danger { background: #fdeded; color: var(--os-danger); }
+
+    .flow {
+      background: var(--os-soft);
+      border: 1px solid var(--os-border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      font-size: 9pt;
+      margin: 12px 0;
+      page-break-inside: avoid;
+    }
+    .flow .arrow { color: var(--os-green-dark); font-weight: 700; margin: 0 4px; }
+
+    .footer-note {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid var(--os-border);
+      font-size: 9pt;
+      color: var(--os-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== COVER ===================== -->
+  <section class="cover">
+    <div class="cover-badge">Technical Documentation</div>
+    <h1>OpenSooq<br/>CDC Data Analyzer</h1>
+    <div class="cover-accent"></div>
+    <p class="subtitle">
+      Convert complicated CDC and raw technical listing data into clear,
+      readable business information — processed entirely in the browser.
+    </p>
+    <div class="cover-meta">
+      <p><strong>Product</strong> · opensooq-cdc-analyzer v0.1.0</p>
+      <p><strong>Author</strong> · Hashem Matouq</p>
+      <p><strong>Organization</strong> · OpenSooq</p>
+      <p><strong>Stack</strong> · Next.js 15 · React 19 · TypeScript · Tailwind CSS 4</p>
+      <p><strong>Document date</strong> · August 2026</p>
+      <p><strong>Audience</strong> · Engineers, QA, product, and operations teams</p>
+    </div>
+  </section>
+
+  <!-- ===================== TOC ===================== -->
+  <section class="toc">
+    <h1 class="section">Table of Contents</h1>
+    <ol>
+      <li><a href="#s1">Executive Overview</a></li>
+      <li><a href="#s2">Goals &amp; Value Proposition</a></li>
+      <li><a href="#s3">System Architecture</a></li>
+      <li><a href="#s4">Repository Structure</a></li>
+      <li><a href="#s5">Technology Stack</a></li>
+      <li><a href="#s6">Getting Started</a></li>
+      <li><a href="#s7">User Guide — Features &amp; Screens</a></li>
+      <li><a href="#s8">Data Pipeline</a></li>
+      <li><a href="#s9">Field Dictionary</a></li>
+      <li><a href="#s10">Listing Status Codes</a></li>
+      <li><a href="#s11">Insights, Lifecycle &amp; QA</a></li>
+      <li><a href="#s12">State Management</a></li>
+      <li><a href="#s13">Export &amp; Formatting</a></li>
+      <li><a href="#s14">Privacy &amp; Security</a></li>
+      <li><a href="#s15">Sample Data</a></li>
+      <li><a href="#s16">Type System Reference</a></li>
+      <li><a href="#s17">Build, Deploy &amp; Operations</a></li>
+      <li><a href="#s18">Troubleshooting</a></li>
+      <li><a href="#s19">Appendix — Glossary &amp; Credits</a></li>
+    </ol>
+  </section>
+
+  <!-- ===================== 1 ===================== -->
+  <section class="section-block" id="s1">
+    <h1 class="section">1. Executive Overview</h1>
+    <p>
+      <strong>OpenSooq CDC Data Analyzer</strong> is a client-side web application that turns
+      Change Data Capture (CDC) exports — typically dense database dumps in CSV or PDF form —
+      into human-readable business intelligence about OpenSooq listings.
+    </p>
+    <p>
+      Operations, moderation, and engineering teams often receive CDC snapshots that contain
+      opaque field names (<code>SF_OP</code>, <code>SF_OFFSET_ID</code>, <code>LAST_EDIT_ACTION</code>),
+      numeric status codes, and rule-engine JSON. This product maps that raw stream into:
+    </p>
+    <ul>
+      <li>A dashboard of activity, status, and risk signals</li>
+      <li>Searchable, filterable record tables with human or raw labels</li>
+      <li>Full listing lifecycle timelines (first event → last event, with gaps and evidence)</li>
+      <li>Status history tracking across official OpenSooq status codes (100–301)</li>
+      <li>Smart insights and QA anomaly detection</li>
+      <li>Side-by-side record comparison and multi-format export</li>
+    </ul>
+    <div class="callout green">
+      <strong>Privacy by design</strong>
+      All parsing and analysis run locally in the user’s browser. Uploaded files are never sent
+      to a backend or third-party AI service by default.
+    </div>
+  </section>
+
+  <!-- ===================== 2 ===================== -->
+  <section class="section-block" id="s2">
+    <h1 class="section">2. Goals &amp; Value Proposition</h1>
+    <h2>2.1 Problems solved</h2>
+    <table>
+      <thead>
+        <tr><th>Problem</th><th>How the analyzer helps</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CDC dumps are hard to read</td>
+          <td>Field dictionary maps technical names to business labels and descriptions</td>
+        </tr>
+        <tr>
+          <td>Status codes are numeric and inconsistent across sources</td>
+          <td>Official codes 100–301 plus aliases (including Arabic-aware normalization)</td>
+        </tr>
+        <tr>
+          <td>Listing journeys are fragmented across many rows</td>
+          <td>Lifecycle replay groups events by listing with chronological ordering</td>
+        </tr>
+        <tr>
+          <td>Anomalies are easy to miss</td>
+          <td>QA engine flags multi-status churn, post-delete updates, missing prices, etc.</td>
+        </tr>
+        <tr>
+          <td>Sensitive PII appears in exports</td>
+          <td>Phone, email, and member ID masked by default with optional reveal</td>
+        </tr>
+        <tr>
+          <td>Data cannot leave the workstation</td>
+          <td>100% browser-side processing; no upload to servers</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2.2 Primary users</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Operations &amp; Moderation</h3>
+        <p>Investigate listing status journeys, violations, and rule-engine actions without SQL.</p>
+      </div>
+      <div>
+        <h3>Engineering &amp; QA</h3>
+        <p>Validate CDC exports, spot ordering issues, compare records, and export evidence packs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3 ===================== -->
+  <section class="section-block" id="s3">
+    <h1 class="section">3. System Architecture</h1>
+    <p>
+      The application is a single-page Next.js client. There is no application backend for file
+      processing. The browser loads the UI, the user selects a file, and the analysis pipeline
+      runs entirely in memory via Zustand state.
+    </p>
+
+    <h2>3.1 High-level flow</h2>
+    <div class="flow">
+      Upload PDF/CSV
+      <span class="arrow">→</span> Read file
+      <span class="arrow">→</span> Parse (Papa Parse / PDF.js)
+      <span class="arrow">→</span> Normalize rows
+      <span class="arrow">→</span> Analyze (insights + lifecycle + status)
+      <span class="arrow">→</span> Dashboard &amp; views
+    </div>
+
+    <h2>3.2 Processing steps (UI)</h2>
+    <table>
+      <thead><tr><th>Step ID</th><th>Label</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td><code>read</code></td><td>Reading file</td><td>File bytes/text loaded in the browser</td></tr>
+        <tr><td><code>extract</code></td><td>Extracting records</td><td>CSV or PDF parser produces raw row objects</td></tr>
+        <tr><td><code>detect</code></td><td>Detecting CDC operations</td><td>SF_OP / aliases mapped to insert/update/delete</td></tr>
+        <tr><td><code>map</code></td><td>Mapping fields</td><td><code>normalizeRawRow</code> builds structured <code>CDCRecord</code>s</td></tr>
+        <tr><td><code>insights</code></td><td>Generating insights</td><td><code>analyzeRecords</code> builds stats, lifecycles, QA, charts</td></tr>
+        <tr><td><code>dashboard</code></td><td>Preparing dashboard</td><td>Navigate to dashboard with full <code>AnalysisResult</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>3.3 Architectural principles</h2>
+    <ul>
+      <li><strong>Client-only analysis</strong> — no server round-trip for CDC content</li>
+      <li><strong>Evidence-first UI</strong> — every insight/timeline step carries evidence strings and an evidence category</li>
+      <li><strong>Offset-aware chronology</strong> — prefer <code>SF_OFFSET_ID</code> over timestamps when ordering events</li>
+      <li><strong>Human / raw dual view</strong> — same data, two presentation modes</li>
+      <li><strong>OpenSooq brand fidelity</strong> — official palette (blue <code>#33529D</code>, green <code>#87BE57</code>)</li>
+    </ul>
+  </section>
+
+  <!-- ===================== 4 ===================== -->
+  <section class="section-block" id="s4">
+    <h1 class="section">4. Repository Structure</h1>
+<pre><code>/workspace
+├── package.json                 # Dependencies &amp; scripts
+├── next.config.ts               # Next.js config (PDF.js canvas alias)
+├── tsconfig.json                # TypeScript (@/* alias)
+├── postcss.config.mjs           # Tailwind CSS v4
+├── eslint.config.mjs
+├── README.md
+├── public/
+│   └── opensooq-logo.png        # Brand logo / favicon
+├── sample-data/
+│   └── sample-cdc.csv           # Demo CDC export (16 rows, 6 listings)
+├── docs/
+│   └── OpenSooq-CDC-Data-Analyzer-Documentation.pdf
+└── src/
+    ├── app/
+    │   ├── layout.tsx           # Root layout, fonts, metadata
+    │   ├── page.tsx             # Entry → AppRoot
+    │   └── globals.css          # Design tokens &amp; animations
+    ├── types/cdc.ts             # Core TypeScript contracts
+    ├── config/
+    │   ├── field-definitions.ts # 40+ field dictionary entries
+    │   └── listing-statuses.ts  # STATUS codes 100–301
+    ├── lib/
+    │   ├── store.ts             # Zustand store + processFile
+    │   ├── utils.ts             # Helpers (cn, formatBytes, keys)
+    │   ├── export.ts            # CSV / Excel / JSON / summary
+    │   ├── parser/csv.ts        # Papa Parse CSV pipeline
+    │   ├── pdf/parse-pdf.ts     # PDF.js extraction
+    │   ├── pdf/log-history.ts   # Admin log history table parser
+    │   ├── normalization/normalize.ts
+    │   ├── formatting/formatters.ts
+    │   └── insights/
+    │       ├── engine.ts        # analyzeRecords orchestrator
+    │       ├── lifecycle.ts     # Per-listing journeys
+    │       ├── ordering.ts      # Chronological sort
+    │       └── status-tracker.ts
+    └── components/
+        ├── app-root.tsx         # View router
+        ├── shared/              # App shell + UI primitives
+        ├── upload/              # Upload &amp; processing screens
+        ├── dashboard/
+        ├── records/             # Table, detail, compare, raw
+        ├── timeline/
+        ├── status/
+        └── insights/            # Insights + QA views</code></pre>
+  </section>
+
+  <!-- ===================== 5 ===================== -->
+  <section class="section-block" id="s5">
+    <h1 class="section">5. Technology Stack</h1>
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>Framework</td><td>Next.js 15.4</td><td>App router, SSR shell, static assets</td></tr>
+        <tr><td>UI</td><td>React 19</td><td>Component tree and client interactivity</td></tr>
+        <tr><td>Language</td><td>TypeScript 5.9</td><td>Typed domain model end-to-end</td></tr>
+        <tr><td>Styling</td><td>Tailwind CSS 4</td><td>Utility styling + OpenSooq CSS variables</td></tr>
+        <tr><td>Fonts</td><td>Cairo (display) + Inter (body)</td><td>Arabic/Latin brand typography</td></tr>
+        <tr><td>State</td><td>Zustand 5</td><td>Global analysis state and view routing</td></tr>
+        <tr><td>Tables</td><td>TanStack Table 8</td><td>Records grid, pagination, columns</td></tr>
+        <tr><td>Charts</td><td>Recharts 3</td><td>Dashboard visualizations</td></tr>
+        <tr><td>CSV</td><td>Papa Parse 5</td><td>Client-side CSV parsing</td></tr>
+        <tr><td>PDF</td><td>pdfjs-dist 5</td><td>Text extraction from CDC PDFs</td></tr>
+        <tr><td>Excel</td><td>SheetJS (xlsx)</td><td>Excel export</td></tr>
+        <tr><td>Icons</td><td>lucide-react</td><td>UI iconography</td></tr>
+        <tr><td>Dates</td><td>date-fns 4</td><td>Date helpers</td></tr>
+        <tr><td>Validation</td><td>Zod 4</td><td>Available for schema work (custom parsers primary)</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <strong>Runtime requirement</strong>
+      Node.js 20 or newer is required for local development and production builds.
+    </div>
+  </section>
+
+  <!-- ===================== 6 ===================== -->
+  <section class="section-block" id="s6">
+    <h1 class="section">6. Getting Started</h1>
+    <h2>6.1 Install &amp; run (development)</h2>
+<pre><code>npm install
+npm run dev</code></pre>
+    <p>Open <code>http://localhost:3000</code>. The dev server uses <code>WATCHPACK_POLLING=true</code> for reliable file watching in containerized environments.</p>
+
+    <h2>6.2 Try the sample file</h2>
+    <p>
+      Use <code>sample-data/sample-cdc.csv</code> from the upload screen. It contains 16 CDC rows across
+      6 listings covering New → Pending → Active → Deactivated cycles, Premium status, Blocked
+      violations, Hidden listings without price, and Expired listings.
+    </p>
+
+    <h2>6.3 Production build</h2>
+<pre><code>npm run build
+npm start
+npm run lint</code></pre>
+  </section>
+
+  <!-- ===================== 7 ===================== -->
+  <section class="section-block" id="s7">
+    <h1 class="section">7. User Guide — Features &amp; Screens</h1>
+
+    <h2>7.1 Upload</h2>
+    <ul>
+      <li>Drag-and-drop or file picker for <strong>PDF</strong> and <strong>CSV</strong></li>
+      <li>Local-processing badge: files never leave the browser</li>
+      <li>Errors include a local Error ID (e.g. <code>ERR-XXXXXX</code>) for support reference</li>
+    </ul>
+
+    <h2>7.2 Processing</h2>
+    <p>Progress bar (0–100%) with a six-step checklist. Message confirms local browser processing.</p>
+
+    <h2>7.3 App shell (post-analysis)</h2>
+    <ul>
+      <li><strong>Header</strong> — OpenSooq logo, global search (200ms debounce), file meta, sensitive-data toggle, export shortcut, “Upload new”</li>
+      <li><strong>Sidebar</strong> — Dashboard, Records, Timeline, Listing Status, Insights, QA Analysis, Raw Data (with counts / severity tones)</li>
+      <li><strong>Coverage panel</strong> — records, listings, fields, source type</li>
+      <li><strong>Footer</strong> — “OpenSooq CDC Analyzer · Made by Hashem Matouq”</li>
+    </ul>
+
+    <h2>7.4 Dashboard</h2>
+    <ul>
+      <li>Six clickable stat cards (total / new / updated / deleted / violations / active)</li>
+      <li>Status tracker summary with bucket chips</li>
+      <li>Smart insights + top important events</li>
+      <li>QA warning banner when issues exist</li>
+      <li>Charts: operations pie, country bar, activity by hour, records over time</li>
+      <li>Processing warnings list</li>
+    </ul>
+
+    <h2>7.5 Records</h2>
+    <ul>
+      <li>TanStack Table with page sizes 25 / 50 / 100 / 250</li>
+      <li>Human / Raw toggle</li>
+      <li>Filters: operation, status, active, country, language, violation, featured, date range, full-text search</li>
+      <li>Column visibility picker</li>
+      <li>Export CSV, Excel, JSON, or Summary (filtered set)</li>
+      <li>Select up to two rows to Compare; Open for Record Detail</li>
+    </ul>
+
+    <h2>7.6 Record Detail</h2>
+    <ul>
+      <li>Badges for operation, status, active, featured, violation, first live, timestamp</li>
+      <li>“Explain this record” plain-language bullets</li>
+      <li>Listing journey mini-timeline from lifecycle data</li>
+      <li>Human view: fields by category, Last Edit Action JSON, technical details</li>
+      <li>Raw view: all original fields; field-help popovers with meaning</li>
+    </ul>
+
+    <h2>7.7 Timeline</h2>
+    <ul>
+      <li>Modes: All activity | By listing</li>
+      <li>Filters: Key events | Everything | Issues only</li>
+      <li>Span cards (start, end, duration, event count)</li>
+      <li>Day-grouped events with sticky headers; pagination (120/page)</li>
+      <li>Per-listing lifecycle cards with expand/collapse and evidence</li>
+    </ul>
+
+    <h2>7.8 Listing Status</h2>
+    <ul>
+      <li>Stats: listings tracked, changed, frequent changers (3+)</li>
+      <li>Status bucket grid with filters and deep-link to records</li>
+      <li>Search + filters (all / changed / 3+ changes); match any point vs current only</li>
+      <li>Expandable status journey chips and log-history source badges</li>
+    </ul>
+
+    <h2>7.9 Insights &amp; QA</h2>
+    <ul>
+      <li><strong>Insights</strong> — activity mix, violations, top country, peak hour; first-vs-last change groups</li>
+      <li><strong>QA Analysis</strong> — multi-status churn, update-after-delete, duplicate bursts, active without price, active+blocked/expired, featured+inactive</li>
+    </ul>
+
+    <h2>7.10 Compare &amp; Raw Data</h2>
+    <ul>
+      <li><strong>Compare</strong> — side-by-side old/new; toggle “only changes”</li>
+      <li><strong>Raw Data</strong> — full extracted table, sticky header, incremental load (100 then +200)</li>
+    </ul>
+  </section>
+
+  <!-- ===================== 8 ===================== -->
+  <section class="section-block" id="s8">
+    <h1 class="section">8. Data Pipeline</h1>
+
+    <h2>8.1 CSV parser (<code>lib/parser/csv.ts</code>)</h2>
+    <ul>
+      <li>Library: Papa Parse</li>
+      <li>Requires a header row; empty lines skipped</li>
+      <li>APIs: <code>parseCsvText</code>, <code>parseCsvFile</code></li>
+      <li>Throws <code>NO_CDC_DATA</code> when no usable rows are found</li>
+    </ul>
+
+    <h2>8.2 PDF parser (<code>lib/pdf/parse-pdf.ts</code>)</h2>
+    <p>Uses <code>pdfjs-dist</code> with a local worker. Pages are extracted via <code>getTextContent</code>, then laid out by Y-baseline grouping.</p>
+    <p><strong>Extraction strategies (in order):</strong></p>
+    <ol>
+      <li>Log history admin table (<code>parseLogHistory</code>)</li>
+      <li>Delimited tables (headers with CDC hints such as <code>SF_OP</code>, <code>SF_TIMESTAMP</code>)</li>
+      <li>Key-value blocks (<code>FIELD: value</code> / <code>FIELD = value</code>)</li>
+      <li>Inline JSON objects with ≥3 keys</li>
+    </ol>
+    <div class="callout warn">
+      <strong>Scanned PDFs</strong>
+      If extracted text is shorter than ~40 characters × page count, the file is flagged
+      <code>scannedLikely</code> and processing throws <code>SCANNED_PDF</code>. Image-only scans are not supported.
+    </div>
+
+    <h2>8.3 Log history (<code>lib/pdf/log-history.ts</code>)</h2>
+    <p>Expected columns: Name | Is Moderator | Action | Action On | Diff | Date.</p>
+    <ul>
+      <li>Detects listing ID from <code>/post/{id}</code> URLs or labelled IDs</li>
+      <li>Normalizes timestamps (ISO, DMY, YMD)</li>
+      <li>Maps action text to status definitions; unresolved rows produce warnings</li>
+      <li>Emits synthetic CDC rows with <code>SOURCE: LOG_HISTORY</code>, merged with table records</li>
+    </ul>
+
+    <h2>8.4 Normalization (<code>lib/normalization/normalize.ts</code>)</h2>
+    <p><code>recordsFromRows</code> → <code>normalizeRawRow</code> for each non-empty row:</p>
+    <ol>
+      <li>Uppercase keys via <code>normalizeKey()</code></li>
+      <li>Resolve aliases (e.g. <code>ID</code> / <code>LISTING_ID</code> / <code>POST_ID</code>; <code>SF_OP</code> / <code>OPERATION</code>)</li>
+      <li>Parse <code>LAST_EDIT_ACTION</code> JSON when present</li>
+      <li>Build nested <code>CDCRecord</code> (entity / status / user / cdc / raw)</li>
+      <li>Assign <code>uid</code>: <code>{id}-row-{index}-{requestId|index}</code></li>
+    </ol>
+    <p><strong>Operation mapping:</strong> insert (<code>i</code>, create), update (<code>u</code>, updated), delete (<code>d</code>, deleted), else unknown.</p>
+    <p><strong>Timestamp priority:</strong> <code>SF_TIMESTAMP</code> → <code>TIMESTAMP</code> → <code>RECORD_UPDATE_DATE</code> → <code>DATE</code> → <code>RECORD_INSERT_DATE</code>.</p>
+
+    <h2>8.5 Chronological ordering (<code>ordering.ts</code>)</h2>
+    <p>CDC dumps are often newest-first and timestamps may share second precision. Sort priority:</p>
+    <ol>
+      <li><code>SF_OFFSET_ID</code> / <code>SF_OFFSET</code> / <code>OFFSET_ID</code> / <code>LAST_EVENT_ID</code> (ascending)</li>
+      <li><code>SF_TIMESTAMP</code> (ascending)</li>
+      <li>Original file index as tie-break</li>
+    </ol>
+  </section>
+
+  <!-- ===================== 9 ===================== -->
+  <section class="section-block" id="s9">
+    <h1 class="section">9. Field Dictionary</h1>
+    <p>
+      Defined in <code>src/config/field-definitions.ts</code>. Unknown fields auto-generate a
+      “Technical Information” fallback via <code>getFieldDefinition</code>.
+    </p>
+    <table>
+      <thead><tr><th>Category</th><th>Example fields</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Listing Information</td>
+          <td>ID, TITLE, DESCRIPTION, PRICE, BASE_PRICE, PRICE_CURRENCY, HAS_PRICE, CATEGORIES_ID, NEW_CAT_ID, CITIES_ID, COUNTRIES_ID, LANG, GEO_LAT, GEO_LNG, DISPLAY_NAME</td>
+          <td>Core listing attributes</td>
+        </tr>
+        <tr>
+          <td>Listing Status</td>
+          <td>ACTIVE, STATUS, IS_FEATURED, IS_HIGHLIGHTED, VIOLATION, IS_FIRST_LIVE, RECORD_EXPIRATION_DATE</td>
+          <td>Visibility &amp; moderation state</td>
+        </tr>
+        <tr>
+          <td>CDC</td>
+          <td>SF_OP, SF_TIMESTAMP, SF_OFFSET_ID, REQUEST_ID, LAST_EDIT_ACTION, RECORD_INSERT_DATE, RECORD_UPDATE_DATE</td>
+          <td>Change-stream metadata</td>
+        </tr>
+        <tr>
+          <td>User Information</td>
+          <td>MEMBERS_ID, EMAIL, PHONE</td>
+          <td>Marked <span class="badge danger">sensitive</span></td>
+        </tr>
+        <tr>
+          <td>Activity</td>
+          <td>NUMBER_OF_TIMES_REPOSTED, POST_SOURCE, POST_TYPE</td>
+          <td>Repost &amp; channel signals</td>
+        </tr>
+        <tr>
+          <td>Technical Information</td>
+          <td>POST_INSERT_IP_COUNTRY, POST_UPDATE_IP_COUNTRY</td>
+          <td>Geo of client actions</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Attached formatters include: <code>price</code>, <code>yesNo</code>, <code>status</code>, <code>violation</code>,
+      <code>operation</code>, <code>datetime</code>, <code>country</code>, <code>language</code>, <code>email</code>,
+      <code>phone</code>, <code>jsonAction</code>.
+    </p>
+    <p>Default visible table columns are listed in <code>DEFAULT_TABLE_COLUMNS</code>.</p>
+  </section>
+
+  <!-- ===================== 10 ===================== -->
+  <section class="section-block" id="s10">
+    <h1 class="section">10. Listing Status Codes</h1>
+    <p>
+      Official OpenSooq STATUS codes live in <code>src/config/listing-statuses.ts</code>.
+      Text aliases resolve log-history labels and informal exports. Normalization lowercases,
+      strips punctuation, and supports Arabic Unicode.
+    </p>
+    <table>
+      <thead><tr><th>Code</th><th>Label</th><th>Tone</th><th>Flags</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>100</strong></td><td>New</td><td>neutral</td><td>—</td><td>Just created, not yet reviewed</td></tr>
+        <tr><td><strong>101</strong></td><td>Pending</td><td>warning</td><td>—</td><td>Awaiting approval / moderation</td></tr>
+        <tr><td><strong>102</strong></td><td>Deactivated</td><td>neutral</td><td>—</td><td>Manually turned off (reversible)</td></tr>
+        <tr><td><strong>103</strong></td><td>Blocked</td><td>danger</td><td>isProblem</td><td>Suspended for policy / violation</td></tr>
+        <tr><td><strong>104</strong></td><td>Hidden</td><td>neutral</td><td>—</td><td>Not publicly visible</td></tr>
+        <tr><td><strong>200</strong></td><td>Expired</td><td>warning</td><td>isProblem</td><td>Past valid lifetime</td></tr>
+        <tr><td><strong>300</strong></td><td>Active</td><td>success</td><td>isLive</td><td>Live and fully visible</td></tr>
+        <tr><td><strong>301</strong></td><td>Premium</td><td>brand</td><td>isLive</td><td>Active with paid features</td></tr>
+      </tbody>
+    </table>
+    <div class="callout green">
+      <strong>Helper sets</strong>
+      <code>LIVE_STATUS_CODES = {300, 301}</code> ·
+      <code>PROBLEM_STATUS_CODES = {103, 200}</code> ·
+      Helpers: <code>isLiveStatus</code>, <code>isProblemStatus</code>, <code>listingStatusLabel</code>, <code>listingStatusTone</code>
+    </div>
+  </section>
+
+  <!-- ===================== 11 ===================== -->
+  <section class="section-block" id="s11">
+    <h1 class="section">11. Insights, Lifecycle &amp; QA</h1>
+
+    <h2>11.1 Analysis orchestrator</h2>
+    <p><code>analyzeRecords</code> in <code>lib/insights/engine.ts</code> runs:</p>
+    <ol>
+      <li><code>computeStats</code> — operation / violation / active counts</li>
+      <li><code>buildLifecycles</code> — per-listing journeys</li>
+      <li><code>buildGlobalTimeline</code> — flat sorted steps</li>
+      <li><code>buildStatusTracker</code> — status history</li>
+      <li><code>buildSmartInsights</code> — activity mix, violations, top country, peak hour</li>
+      <li><code>buildQaInsights</code> — anomaly rules</li>
+      <li><code>detectImportantEvents</code> — rule actions, violations, deletes (cap 100)</li>
+      <li><code>buildTimeline</code> — flat CDC events</li>
+      <li><code>detectChanges</code> — first-vs-last field diffs (cap 200 groups)</li>
+      <li><code>buildCharts</code> — operations, status, country, language, overTime, violationsOverTime, activityByHour</li>
+      <li>Warnings for unrecognized status codes</li>
+    </ol>
+
+    <h2>11.2 Lifecycle</h2>
+    <p>
+      Listings are grouped by ID, sorted chronologically, and consecutive pairs are diffed across
+      18 tracked fields (title, description, price, status, active, featured, violation, category,
+      city, country, language, hasPrice, repost count, expiration, etc.).
+    </p>
+    <p>
+      Each step has a <code>StepKind</code>: created, activated, deactivated, updated, price, status,
+      violation, rule, featured, category, reposted, expired, deleted, or event.
+    </p>
+
+    <h2>11.3 Status tracker</h2>
+    <ul>
+      <li>Groups by listing ID, else title+member, else row index</li>
+      <li>Builds <code>StatusPoint[]</code> and <code>StatusTransition[]</code></li>
+      <li>Aggregates buckets with current / ever / record counts</li>
+      <li><code>MULTI_CHANGE_THRESHOLD = 3</code> drives warning severity</li>
+      <li>Potential issues: active + problem status; featured + inactive</li>
+    </ul>
+
+    <h2>11.4 Evidence categories</h2>
+    <table>
+      <thead><tr><th>Category</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge blue">FACT</span></td><td>Directly observed from field values</td></tr>
+        <tr><td><span class="badge green">DERIVED</span></td><td>Computed from aggregates or diffs</td></tr>
+        <tr><td><span class="badge warn">INTERPRETATION</span></td><td>Inferred from rule-engine / action JSON</td></tr>
+        <tr><td><span class="badge danger">POTENTIAL_ISSUE</span></td><td>QA anomaly — not labelled as a confirmed bug</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== 12 ===================== -->
+  <section class="section-block" id="s12">
+    <h1 class="section">12. State Management</h1>
+    <p>Global store: <code>useAppStore</code> in <code>src/lib/store.ts</code> (Zustand).</p>
+
+    <h2>12.1 State shape</h2>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Default / notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>view</code></td><td><code>AppView</code></td><td><code>"upload"</code></td></tr>
+        <tr><td><code>processingSteps</code></td><td><code>ProcessingStep[]</code></td><td>Six pending steps</td></tr>
+        <tr><td><code>progress</code></td><td>number</td><td>0–100</td></tr>
+        <tr><td><code>error</code> / <code>errorId</code></td><td>string | null</td><td>User-facing error + local ID</td></tr>
+        <tr><td><code>analysis</code></td><td><code>AnalysisResult | null</code></td><td>Full analysis payload</td></tr>
+        <tr><td><code>filters</code></td><td><code>FilterState</code></td><td>Search + facet filters</td></tr>
+        <tr><td><code>viewMode</code></td><td><code>human | raw</code></td><td>Default human</td></tr>
+        <tr><td><code>showSensitive</code></td><td>boolean</td><td>Default false (masked)</td></tr>
+        <tr><td><code>selectedRecordUid</code></td><td>string | null</td><td>Opens record-detail</td></tr>
+        <tr><td><code>compareA</code> / <code>compareB</code></td><td>string | null</td><td>Compare selection</td></tr>
+        <tr><td><code>visibleColumns</code></td><td>string[]</td><td><code>DEFAULT_TABLE_COLUMNS</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>12.2 Key actions</h2>
+    <ul>
+      <li><code>processFile(file)</code> — full parse + analyze pipeline</li>
+      <li><code>setView</code>, <code>setFilters</code>, <code>resetFilters</code></li>
+      <li><code>setViewMode</code>, <code>setShowSensitive</code></li>
+      <li><code>setSelectedRecord</code>, <code>setCompare</code>, <code>setVisibleColumns</code></li>
+      <li><code>clearData</code> — return to upload state</li>
+    </ul>
+    <p>Client filtering is performed by <code>filterRecords(records, filters)</code> across ID, title, member, phone, requestId, and raw fields.</p>
+  </section>
+
+  <!-- ===================== 13 ===================== -->
+  <section class="section-block" id="s13">
+    <h1 class="section">13. Export &amp; Formatting</h1>
+
+    <h2>13.1 Exports (<code>lib/export.ts</code>)</h2>
+    <table>
+      <thead><tr><th>Function</th><th>Format</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td><code>exportCsv</code></td><td>.csv</td><td>Raw field values, properly escaped</td></tr>
+        <tr><td><code>exportExcel</code></td><td>.xlsx</td><td>Sheet “CDC” via SheetJS</td></tr>
+        <tr><td><code>exportJson</code></td><td>.json</td><td>Array of <code>record.raw</code> objects</td></tr>
+        <tr><td><code>exportPdfSummary</code></td><td>.txt</td><td>Plain-text summary of filtered counts</td></tr>
+      </tbody>
+    </table>
+    <p>Downloads use <code>URL.createObjectURL</code>. Exports apply to the currently filtered Records set.</p>
+
+    <h2>13.2 Masking &amp; display formatters</h2>
+    <table>
+      <thead><tr><th>Function</th><th>Behavior when sensitive hidden</th></tr></thead>
+      <tbody>
+        <tr><td><code>maskPhone</code></td><td>Only last 4 digits visible</td></tr>
+        <tr><td><code>maskEmail</code></td><td>First character + <code>***@domain</code></td></tr>
+        <tr><td><code>maskIp</code></td><td>Partial octets hidden</td></tr>
+        <tr><td><code>maskMemberId</code></td><td>First 2 + <code>***</code> + last 2</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Country codes expand to names (JO→Jordan, AE→UAE, SA→Saudi Arabia, …). Languages map to
+      Arabic, English, French, Kurdish. Operations become Created / Updated / Deleted.
+      Datetimes use en-GB locale with 12-hour time. Rule actions are humanized
+      (e.g. activate → “Listing activated”; actors: owner, admin, system, rule_engine, moderator).
+    </p>
+  </section>
+
+  <!-- ===================== 14 ===================== -->
+  <section class="section-block" id="s14">
+    <h1 class="section">14. Privacy &amp; Security</h1>
+    <div class="callout green">
+      <strong>Default posture</strong>
+      Uploaded files are read with browser File APIs and analyzed in memory. Nothing is uploaded
+      to OpenSooq servers or third-party AI services as part of the analysis flow.
+    </div>
+    <ul>
+      <li>Sensitive fields (member ID, email, phone) masked unless the user toggles reveal</li>
+      <li>Error IDs are generated locally for support correlation only</li>
+      <li>No environment secrets are required for core functionality</li>
+      <li>Suitable for handling internal CDC exports on a locked-down workstation</li>
+    </ul>
+    <div class="callout warn">
+      <strong>Operational note</strong>
+      Revealing sensitive data on a shared screen still exposes PII. Prefer keeping masking on
+      during demos and screen shares.
+    </div>
+  </section>
+
+  <!-- ===================== 15 ===================== -->
+  <section class="section-block" id="s15">
+    <h1 class="section">15. Sample Data</h1>
+    <p>File: <code>sample-data/sample-cdc.csv</code> — 16 data rows, 29 columns, 6 unique listing IDs.</p>
+    <table>
+      <thead><tr><th>Listing ID</th><th>Title</th><th>Journey highlights</th></tr></thead>
+      <tbody>
+        <tr><td>284387206</td><td>أجمل الأرقام رباعي</td><td>New → Pending → Active → Deactivated → Active with over-limit rule actions</td></tr>
+        <tr><td>284387300</td><td>iPhone 14 Pro Max</td><td>Insert → price increase → Premium (301)</td></tr>
+        <tr><td>284387401</td><td>Villa for rent Amman</td><td>Blocked (103) with violation + moderator action</td></tr>
+        <tr><td>284387500</td><td>Laptop Dell XPS</td><td>Hidden (104), no price (<code>HAS_PRICE=0</code>)</td></tr>
+        <tr><td>284387600</td><td>Old listing</td><td>Expired (200)</td></tr>
+        <tr><td>284387900</td><td>Moderation journey</td><td>Five status changes: New → Pending → Active → Deactivated → Active</td></tr>
+      </tbody>
+    </table>
+    <p>Notable columns: <code>SF_OFFSET_ID</code> for ordering, <code>LAST_EDIT_ACTION</code> JSON, sensitive phone/email, <code>POST_INSERT_IP_COUNTRY</code>.</p>
+  </section>
+
+  <!-- ===================== 16 ===================== -->
+  <section class="section-block" id="s16">
+    <h1 class="section">16. Type System Reference</h1>
+    <p>Primary contracts live in <code>src/types/cdc.ts</code>.</p>
+
+    <h2>16.1 Key unions</h2>
+    <ul>
+      <li><code>CDCOperation</code>: insert | update | delete | unknown</li>
+      <li><code>InsightSeverity</code>: information | warning | potential_issue</li>
+      <li><code>EvidenceCategory</code>: FACT | DERIVED | INTERPRETATION | POTENTIAL_ISSUE</li>
+      <li><code>ViewMode</code>: human | raw</li>
+      <li><code>AppView</code>: upload, processing, dashboard, records, timeline, status, insights, qa, raw, compare, record-detail</li>
+    </ul>
+
+    <h2>16.2 Core interfaces (summary)</h2>
+    <table>
+      <thead><tr><th>Interface</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>CDCRecord</code></td><td>Normalized listing event with entity/status/user/cdc/raw</td></tr>
+        <tr><td><code>Lifecycle</code> / <code>LifecycleStep</code></td><td>Per-listing journey and individual steps</td></tr>
+        <tr><td><code>ListingStatusTrack</code></td><td>Full status history for one listing</td></tr>
+        <tr><td><code>StatusTrackerResult</code></td><td>Buckets + tracks + totals</td></tr>
+        <tr><td><code>InsightItem</code> / <code>ImportantEvent</code></td><td>Smart insights and highlighted events</td></tr>
+        <tr><td><code>FieldChange</code> / <code>ListingChangeGroup</code></td><td>First-vs-last diffs</td></tr>
+        <tr><td><code>DashboardStats</code></td><td>Aggregate operation/violation counts</td></tr>
+        <tr><td><code>AnalysisResult</code></td><td>Complete analysis payload held in the store</td></tr>
+        <tr><td><code>FilterState</code></td><td>UI filter facets</td></tr>
+        <tr><td><code>SourceFileMeta</code></td><td>Uploaded file metadata</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== 17 ===================== -->
+  <section class="section-block" id="s17">
+    <h1 class="section">17. Build, Deploy &amp; Operations</h1>
+    <h2>17.1 Scripts</h2>
+    <table>
+      <thead><tr><th>Script</th><th>Command</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>dev</td><td><code>npm run dev</code></td><td>Local development server</td></tr>
+        <tr><td>build</td><td><code>npm run build</code></td><td>Production Next.js build</td></tr>
+        <tr><td>start</td><td><code>npm start</code></td><td>Serve production build</td></tr>
+        <tr><td>lint</td><td><code>npm run lint</code></td><td>ESLint (Next core-web-vitals + TypeScript)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>17.2 Deployment model</h2>
+    <ul>
+      <li>Standard Next.js hosting (Vercel, Node <code>next start</code>, or container)</li>
+      <li>No backend API required for CDC analysis</li>
+      <li>No environment variables required for core features</li>
+      <li>PDF.js worker is bundled from the package via <code>import.meta.url</code></li>
+      <li><code>next.config.ts</code> disables the canvas alias used by some PDF.js builds</li>
+    </ul>
+
+    <h2>17.3 Branding &amp; metadata</h2>
+    <ul>
+      <li>Title: OpenSooq CDC Data Analyzer</li>
+      <li>Author metadata: Hashem Matouq</li>
+      <li>Favicon / logo: <code>/opensooq-logo.png</code></li>
+      <li>CSS tokens: <code>--os-blue</code>, <code>--os-green</code>, <code>--os-navy</code>, and supporting soft/border/muted scales</li>
+    </ul>
+  </section>
+
+  <!-- ===================== 18 ===================== -->
+  <section class="section-block" id="s18">
+    <h1 class="section">18. Troubleshooting</h1>
+    <table>
+      <thead><tr><th>Symptom</th><th>Likely cause</th><th>What to try</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Error <code>SCANNED_PDF</code></td>
+          <td>Image-only / OCR-less PDF</td>
+          <td>Export a text-based PDF or use CSV instead</td>
+        </tr>
+        <tr>
+          <td>Error <code>NO_CDC_DATA</code></td>
+          <td>Empty file or no header/rows</td>
+          <td>Confirm delimiter and header row; try sample CSV</td>
+        </tr>
+        <tr>
+          <td>Events appear out of order</td>
+          <td>Missing <code>SF_OFFSET_ID</code>; colliding timestamps</td>
+          <td>Include offset IDs in the export; verify sort priority</td>
+        </tr>
+        <tr>
+          <td>Unknown status labels</td>
+          <td>Nonstandard status text</td>
+          <td>Add alias in <code>listing-statuses.ts</code> or use numeric codes</td>
+        </tr>
+        <tr>
+          <td>Sensitive values visible</td>
+          <td>Reveal toggle enabled</td>
+          <td>Turn off “Show sensitive” in the header</td>
+        </tr>
+        <tr>
+          <td>Large file feels slow</td>
+          <td>Browser memory / CPU bound</td>
+          <td>Filter the export upstream; process fewer pages/rows</td>
+        </tr>
+        <tr>
+          <td>PDF tables incomplete</td>
+          <td>Complex layout / multi-column gaps</td>
+          <td>Prefer CSV; or ensure tab/pipe-delimited text layout</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== 19 ===================== -->
+  <section class="section-block" id="s19">
+    <h1 class="section">19. Appendix — Glossary &amp; Credits</h1>
+
+    <h2>19.1 Glossary</h2>
+    <table>
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>CDC</td><td>Change Data Capture — stream of insert/update/delete events from a data store</td></tr>
+        <tr><td>Listing</td><td>An OpenSooq classified advertisement identified primarily by <code>ID</code></td></tr>
+        <tr><td>Lifecycle</td><td>Ordered reconstruction of a listing’s events from first to last</td></tr>
+        <tr><td>SF_OP</td><td>CDC operation field (insert / update / delete)</td></tr>
+        <tr><td>SF_OFFSET_ID</td><td>Monotonic stream offset used for authoritative event ordering</td></tr>
+        <tr><td>LAST_EDIT_ACTION</td><td>JSON payload describing who/what changed the listing and why</td></tr>
+        <tr><td>Log history</td><td>Admin moderation table sometimes embedded in PDF exports</td></tr>
+        <tr><td>Evidence</td><td>Supporting values or rules shown with each insight or timeline step</td></tr>
+      </tbody>
+    </table>
+
+    <h2>19.2 Document control</h2>
+    <table>
+      <thead><tr><th>Item</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Product</td><td>OpenSooq CDC Data Analyzer (opensooq-cdc-analyzer)</td></tr>
+        <tr><td>Version covered</td><td>0.1.0</td></tr>
+        <tr><td>Author</td><td>Hashem Matouq</td></tr>
+        <tr><td>Organization</td><td>OpenSooq</td></tr>
+        <tr><td>Document type</td><td>Full technical &amp; user documentation (PDF)</td></tr>
+        <tr><td>Generated</td><td>August 2026</td></tr>
+      </tbody>
+    </table>
+
+    <div class="footer-note">
+      OpenSooq CDC Data Analyzer — Convert complicated CDC / raw technical data into clear,
+      readable business information. Made by Hashem Matouq. Brand colors: OpenSooq blue #33529D,
+      OpenSooq green #87BE57. This document describes the application as implemented in the
+      project repository and is intended for internal engineering, QA, and operations use.
+    </div>
+  </section>
+
+</body>
+</html>
