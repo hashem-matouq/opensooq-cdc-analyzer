@@ -22,7 +22,9 @@ Standard commands live in `package.json` (`dev`, `build`, `start`, `lint`); see 
 
 ### Use webpack, not Turbopack
 
-Run the dev server via `npm run dev` (webpack). Do **not** add `--turbopack`:
+`dev` and `build` both pin the bundler with a `TURBOPACK=` prefix, so webpack is used even if a
+developer has `TURBOPACK=1` exported or in a `.env.local`. Don't drop that prefix, and don't add
+`--turbopack`:
 
 - `next.config.ts` aliases `canvas` to `false` under the `webpack` key, which Turbopack ignores —
   it warns `Webpack is configured while Turbopack is not`. That alias exists for `pdfjs-dist`, so
@@ -45,5 +47,9 @@ one `.next` corrupt each other's manifests, even on the same bundler.
 
 A stale or partially written `.next` surfaces as a runtime `ENOENT ... app-build-manifest.json`
 (e.g. for `_not-found`) and returns HTTP 500, or makes `/` start 404ing. Next.js does not self-heal
-it; stop every dev server, `rm -rf .next`, and start a single one. `.next/` is gitignored, so
-deleting it is always safe.
+it; stop every dev server and run `npm run dev:clean`, which clears `.next` before starting.
+`.next/` is gitignored, so deleting it is always safe.
+
+Note that `pkill -f "next dev"` is dangerous here: the pattern also matches the shell command
+running it, so it can kill your own session. Match `[n]ext-server` or stop the process from its
+own terminal instead.
