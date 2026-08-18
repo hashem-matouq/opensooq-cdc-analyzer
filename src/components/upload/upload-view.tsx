@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import Image from "next/image";
 import {
   CheckCircle2,
   FileSpreadsheet,
@@ -59,12 +60,21 @@ export function UploadView() {
     <div className="min-h-screen">
       <header className="border-b border-[var(--os-border)] bg-white">
         <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-3 px-4 md:px-6">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--os-blue)] text-sm font-bold text-white">
-            OS
-          </span>
-          <div>
-            <div className="text-sm font-semibold leading-tight text-[var(--os-navy)]">OpenSooq</div>
-            <div className="text-xs leading-tight text-[var(--os-muted)]">CDC Data Analyzer</div>
+          <Image
+            src="/opensooq-logo.png"
+            alt="OpenSooq"
+            width={230}
+            height={104}
+            priority
+            className="h-9 w-auto"
+          />
+          <div className="border-l border-[var(--os-border)] pl-3">
+            <div className="text-sm font-semibold leading-tight text-[var(--os-navy)]">
+              CDC Data Analyzer
+            </div>
+            <div className="text-xs leading-tight text-[var(--os-muted)]">
+              Made by Hashem Matouq
+            </div>
           </div>
           <div className="ml-auto hidden sm:block">
             <Badge tone="success" dot>
@@ -230,6 +240,11 @@ export function UploadView() {
             </div>
           </Card>
         </div>
+
+        <footer className="mt-12 border-t border-[var(--os-border)] pt-5 text-center text-xs text-[var(--os-muted)]">
+          <span className="font-semibold text-[var(--os-blue)]">OpenSooq</span> CDC Data Analyzer ·
+          Made by <span className="font-semibold text-[var(--os-navy)]">Hashem Matouq</span>
+        </footer>
       </div>
     </div>
   );

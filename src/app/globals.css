@@ -1,33 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  /* OpenSooq-inspired identity: blue (trust), green (success), white (space) */
-  --os-blue: #1177c7;
-  --os-blue-dark: #0b5a9b;
-  --os-blue-deep: #0d2f4f;
-  --os-navy: #10263c;
-  --os-green: #2fa457;
-  --os-green-soft: #eaf7ee;
-  --os-sky: #e9f3fc;
-  --os-sky-strong: #d3e8f8;
-  --os-soft: #f5f8fb;
-  --os-border: #e2e9f1;
-  --os-border-strong: #cfdae6;
-  --os-muted: #64758a;
-  --os-muted-strong: #43556b;
-  --os-success: #2fa457;
+  /* Official OpenSooq brand palette, sampled from the logo:
+     blue #33529D (wordmark) and green #87BE57 (Sooq / Arabic mark). */
+  --os-brand-blue: #33529d;
+  --os-brand-green: #87be57;
+
+  --os-blue: #33529d;
+  --os-blue-dark: #27407c;
+  --os-blue-deep: #1b2e5a;
+  --os-navy: #16234a;
+  --os-green: #87be57;
+  --os-green-dark: #5f8f3c;
+  --os-green-soft: #f0f7e9;
+  --os-sky: #eef1f9;
+  --os-sky-strong: #dbe2f2;
+  --os-soft: #f6f7fb;
+  --os-border: #e3e7f1;
+  --os-border-strong: #c9d1e6;
+  --os-muted: #6b7590;
+  --os-muted-strong: #49536e;
+  --os-success: #5f8f3c;
   --os-warning: #c9860b;
   --os-warning-soft: #fdf4e3;
   --os-danger: #d0403f;
   --os-danger-soft: #fdeded;
-  --os-info: #1177c7;
+  --os-info: #33529d;
 
-  --background: #f4f7fa;
+  --background: #f5f6fb;
   --foreground: var(--os-navy);
 
   --radius-card: 14px;
-  --shadow-card: 0 1px 2px rgba(16, 38, 60, 0.04), 0 8px 24px rgba(16, 38, 60, 0.05);
-  --shadow-pop: 0 12px 32px rgba(16, 38, 60, 0.12);
+  --shadow-card: 0 1px 2px rgba(22, 35, 74, 0.04), 0 8px 24px rgba(22, 35, 74, 0.06);
+  --shadow-pop: 0 12px 32px rgba(22, 35, 74, 0.14);
 }
 
 @theme inline {

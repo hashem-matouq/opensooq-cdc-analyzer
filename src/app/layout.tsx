@@ -16,7 +16,9 @@ const body = Inter({
 export const metadata: Metadata = {
   title: "OpenSooq CDC Data Analyzer",
   description:
-    "Convert complicated CDC and raw technical data into clear, readable business information.",
+    "Convert complicated CDC and raw technical data into clear, readable business information. Made by Hashem Matouq.",
+  authors: [{ name: "Hashem Matouq" }],
+  icons: { icon: "/opensooq-logo.png" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

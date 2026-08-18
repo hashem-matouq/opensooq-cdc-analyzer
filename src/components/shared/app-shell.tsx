@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Activity,
   Clock3,
@@ -86,17 +87,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex h-16 items-center gap-4 px-4 md:px-6">
           <button
             onClick={() => setView("dashboard")}
-            className="flex shrink-0 items-center gap-2.5"
+            className="flex shrink-0 items-center gap-3"
             aria-label="Go to dashboard"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--os-blue)] text-sm font-bold text-white">
-              OS
-            </span>
-            <span className="hidden text-left sm:block">
+            <Image
+              src="/opensooq-logo.png"
+              alt="OpenSooq"
+              width={230}
+              height={104}
+              priority
+              className="h-9 w-auto"
+            />
+            <span className="hidden text-left border-l border-[var(--os-border)] pl-3 sm:block">
               <span className="block text-sm font-semibold leading-tight text-[var(--os-navy)]">
-                OpenSooq
+                CDC Analyzer
               </span>
-              <span className="block text-xs leading-tight text-[var(--os-muted)]">CDC Analyzer</span>
+              <span className="block text-xs leading-tight text-[var(--os-muted)]">
+                Listing data, in plain language
+              </span>
             </span>
           </button>
 
@@ -226,11 +234,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Badge>
               </div>
             </div>
+
+            <p className="mt-3 px-1 text-center text-[11px] leading-relaxed text-[var(--os-muted)]">
+              Made by{" "}
+              <span className="font-semibold text-[var(--os-navy)]">Hashem Matouq</span>
+            </p>
           </div>
         </aside>
 
         <main className="min-w-0 px-4 py-6 md:px-6 lg:px-8">
           <div className="mx-auto max-w-[1400px]">{children}</div>
+          <footer className="mx-auto mt-8 max-w-[1400px] border-t border-[var(--os-border)] pt-4 text-center text-xs text-[var(--os-muted)]">
+            <span className="font-semibold text-[var(--os-blue)]">OpenSooq</span> CDC Analyzer ·
+            Made by <span className="font-semibold text-[var(--os-navy)]">Hashem Matouq</span>
+          </footer>
         </main>
       </div>
     </div>
