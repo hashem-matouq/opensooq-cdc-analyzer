@@ -19,3 +19,18 @@ Standard commands live in `package.json` (`dev`, `build`, `start`, `lint`); see 
 - Because everything runs in the browser, verifying real behavior requires a browser (e.g. driving
   the pre-installed Chrome at `/usr/bin/google-chrome-stable` via Playwright); `curl` only returns
   the pre-upload HTML shell.
+
+### Use webpack, not Turbopack
+
+Run the dev server via `npm run dev` (webpack). Do **not** add `--turbopack`:
+
+- `next.config.ts` aliases `canvas` to `false` under the `webpack` key, which Turbopack ignores —
+  it warns `Webpack is configured while Turbopack is not`. That alias exists for `pdfjs-dist`, so
+  PDF uploads are the first thing to break under Turbopack.
+- The two bundlers write incompatible `.next` layouts (webpack emits `server/app/_not-found`,
+  Turbopack emits `server/app/_not-found/page`). Switching bundlers, or running `next build` and
+  `next dev` against the same `.next`, leaves stale manifests behind.
+
+A stale or partially written `.next` surfaces as a runtime `ENOENT ... app-build-manifest.json`
+(e.g. for `_not-found`) and returns HTTP 500. Next.js does not self-heal it; stop the dev server,
+`rm -rf .next`, and restart. `.next/` is gitignored, so deleting it is always safe.
