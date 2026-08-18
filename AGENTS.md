@@ -31,6 +31,19 @@ Run the dev server via `npm run dev` (webpack). Do **not** add `--turbopack`:
   Turbopack emits `server/app/_not-found/page`). Switching bundlers, or running `next build` and
   `next dev` against the same `.next`, leaves stale manifests behind.
 
+There is no `--webpack` flag in 15.5.23; webpack is the default. Turbopack can only be turned on by
+`--turbo`/`--turbopack` or a `TURBOPACK` env var. Two traps with that variable:
+
+- `TURBOPACK=0` still enables Turbopack — the string `"0"` is truthy. Only an empty value
+  (`TURBOPACK=`) or `unset TURBOPACK` disables it.
+- Next.js loads `.env*`, so a `TURBOPACK=1` line in a local `.env.local` silently forces Turbopack.
+  `.gitignore` covers `.env*`, so such a file never shows up in `git status`. The startup banner
+  lists loaded env files (`- Environments: .env.local`), which is the quickest way to spot it.
+
+Only run **one** dev server per checkout. Several `next dev` instances (or a `next build`) sharing
+one `.next` corrupt each other's manifests, even on the same bundler.
+
 A stale or partially written `.next` surfaces as a runtime `ENOENT ... app-build-manifest.json`
-(e.g. for `_not-found`) and returns HTTP 500. Next.js does not self-heal it; stop the dev server,
-`rm -rf .next`, and restart. `.next/` is gitignored, so deleting it is always safe.
+(e.g. for `_not-found`) and returns HTTP 500, or makes `/` start 404ing. Next.js does not self-heal
+it; stop every dev server, `rm -rf .next`, and start a single one. `.next/` is gitignored, so
+deleting it is always safe.
